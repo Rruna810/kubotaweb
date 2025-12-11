@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>管理者ログイン</title>
+  <style>
+    body {
+      font-family: Inter, Noto Sans JP;
+      background:#f6f8fb;
+      padding:40px;
+      text-align:center;
+    }
+    .card{
+      background:white;
+      width:350px;
+      margin:40px auto;
+      padding:30px;
+      border-radius:16px;
+      box-shadow:0 4px 16px rgba(0,0,0,0.08);
+    }
+    input{
+      width:100%;
+      padding:12px;
+      font-size:16px;
+      border:2px solid #ddd;
+      border-radius:8px;
+      margin-bottom:16px;
+    }
+    button{
+      width:100%;
+      padding:12px;
+      background:#0b6fb2;
+      color:white;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+      cursor:pointer;
+    }
+    button:hover{opacity:0.9}
+    .error{
+      color:red;
+      font-size:14px;
+      margin-top:10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>管理者ログイン</h2>
+  <input type="password" id="password" placeholder="パスワードを入力">
+  <button onclick="login()">ログイン</button>
+  <div id="error" class="error"></div>
+</div>
+
+<script>
+  const ADMIN_PASSWORD = "kubota2024"; // ←好きに変えてOK
+
+  function login() {
+    const pw = document.getElementById("password").value;
+
+    if (pw === ADMIN_PASSWORD) {
+      localStorage.setItem("admin-auth", "true");
+      location.href = "information-admin.html";
+    } else {
+      document.getElementById("error").textContent = "パスワードが違います";
+    }
+  }
+</script>
+
+</body>
+</html>

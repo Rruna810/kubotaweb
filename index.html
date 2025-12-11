@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>株式会社窪田建設 - ホーム</title>
+
+  <style>
+    :root{
+      --accent:#0b6fb2;
+      --accent-2:#0b9ed2;
+      --dark:#0f1720;
+      --muted:#6b7280;
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --radius:16px;
+      font-family: Inter, Noto Sans JP, system-ui;
+    }
+    body{margin:0;padding:24px;background:var(--bg);color:var(--dark);line-height:1.6;}
+    .container{max-width:1100px;margin:0 auto;}
+    header{display:flex;justify-content:space-between;align-items:center;padding:18px 0;margin-bottom:20px;}
+    nav{display:flex;gap:12px;flex-wrap:wrap;}
+    .btn{background:var(--accent);color:#fff;padding:10px 20px;border-radius:10px;border:none;cursor:pointer;transition:.3s;font-weight:500;}
+    .btn:hover{background:var(--accent-2);}a{text-decoration:none;color:inherit}
+
+    .hero{display:grid;grid-template-columns:1fr 400px;gap:32px;margin:40px 0;}
+    .card{background:#fff;padding:20px;border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.06);}    
+
+    .info-section{margin:40px 0;text-align:center;}
+    .info-list{list-style:none;padding:0;margin:0;}
+    .info-item{background:#fff;padding:16px 20px;margin-bottom:12px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.04);display:flex;gap:16px;align-items:center;cursor:pointer;transition:.2s;text-align:left;}
+    .info-item:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(0,0,0,.08);}    
+    .info-date{color:var(--accent);font-weight:600;}
+    .info-title{flex:1;font-size:16px;font-weight:600;}
+    .badge-event{background:#10b981;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;}
+    .badge-other{background:#8b5cf6;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;}
+
+    .pagination{display:flex;justify-content:center;gap:6px;margin-top:20px;flex-wrap:wrap;}
+    .page-btn{padding:6px 10px;background:#fff;border-radius:6px;cursor:pointer;border:1px solid #cbd5e1;font-size:14px;}
+    .page-btn.active{background:#0b6fb2;color:#fff;border-color:#0b6fb2;}
+    .page-btn:hover{background:#e2e8f0;}    
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px;}    
+    footer{margin-top:40px;color:var(--muted);font-size:14px;}
+
+    .slider{position:relative;margin:40px 0;}
+    .slider-container{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:24px 0;}
+    .slider-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.06);cursor:pointer;transition:.3s;}
+    .slider-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.12);}
+    .slider-card img{width:100%;height:240px;object-fit:cover;display:block;}
+    .slider-card h4{padding:16px;margin:0;text-align:center;}
+    .slider-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(11,111,178,.9);color:#fff;border:none;width:48px;height:48px;border-radius:50%;cursor:pointer;font-size:24px;display:flex;align-items:center;justify-content:center;transition:.3s;}
+    .slider-nav:hover{background:#0b9ed2;}
+    .slider-nav.prev{left:-24px;}
+    .slider-nav.next{right:-24px;}
+
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;}
+    .modal.active{display:flex;}
+    .modal-content{background:#fff;border-radius:20px;max-width:700px;width:90%;max-height:85vh;overflow-y:auto;padding:32px;position:relative;}
+    .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:32px;cursor:pointer;color:#6b7280;line-height:1;}
+    .modal-close:hover{color:#0f1720;}
+    .modal-content h2{margin-top:0;color:#0b6fb2;}
+    .modal-content img{width:100%;height:300px;object-fit:cover;border-radius:12px;margin-bottom:20px;}
+
+    @media(max-width:768px){
+      .hero{grid-template-columns:1fr}
+      .slider-container{grid-template-columns:1fr}
+      .two-col{grid-template-columns:1fr}
+      .slider-nav{width:40px;height:40px;font-size:20px}
+      .slider-nav.prev{left:-12px}
+      .slider-nav.next{right:-12px}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div style="font-size:20px;font-weight:700">株式会社窪田建設</div>
+    <nav>
+      <a href="#business" class="btn">業務内容</a>
+      
+      <a href="#access" class="btn">アクセス</a>
+      <a href="form.html" class="btn">お問い合わせ</a>
+    </nav>
+  </header>
+
+  <section class="hero" style="grid-template-columns:1fr;">
+    <div>
+      <h1>地域を支える確かな技術と品質</h1>
+      <p>土木工事・舗装工事・水道施設工事まで幅広く対応しています。</p>
+    </div>
+  </section>
+
+  <!-- 会社概要と事業の流れを2カラムで配置 -->
+  <section class="two-col" style="margin-top:20px;">
+    <div class="card">
+      <h3>会社概要（主要情報）</h3>
+      <p><strong>会社名:</strong> 株式会社窪田建設</p>
+      <p><strong>代表者:</strong> 窪田 哲覧</p>
+      <p><strong>所在地:</strong> 奈良県葛城市尺土131-1</p>
+      <p><strong>TEL:</strong> 0745-48-0180</p>
+      <p><strong>資本金:</strong> 10,000千円</p>
+      <p><strong>業務内容:</strong> 土木工事、舗装工事、水道施設工事、鋼構造物工事、とび・土工工事など</p>
+      <p><strong>許可番号:</strong> 奈良県知事許可 第011790号</p>
+    </div>
+
+    <div class="card" style="min-height:360px;">
+      <h2>事業の流れ</h2>
+      <ol style="font-size:18px;line-height:2;">
+        <li>お問い合わせ</li>
+        <li>現地調査</li>
+        <li>お見積もり</li>
+        <li>施工</li>
+        <li>アフターフォロー</li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="access" class="card" style="margin-top:50px;">
+    <h2>アクセス</h2>
+    <iframe src="https://maps.google.com/maps?q=奈良県葛城市尺土131-1&output=embed" width="100%" height="360" style="border:0;border-radius:12px;" allowfullscreen loading="lazy"></iframe>
+  </section>
+
+  <section id="business" class="slider">
+    <h2>業務内容</h2>
+    <button class="slider-nav prev" onclick="changeSlide(-1)">‹</button>
+    <div class="slider-container" id="sliderContainer"></div>
+    <button class="slider-nav next" onclick="changeSlide(1)">›</button>
+  </section>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <section class="info-section">
+    <h2>INFORMATION</h2>
+    <ul class="info-list" id="infoList"></ul>
+    <button onclick="location.href='information-admin.html'" class="btn" style="margin-top:14px;">お知らせを管理する</button>
+  </section>
+
+  <!-- ★ 下部の会社情報セクションを完全削除 -->
+
+  <footer>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-top:20px;">
+      <div>© <span id="year"></span> 株式会社窪田建設</div>
+      <div>TEL: 0745-48-0180</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const businessData = [
+    {
+      title: "土木工事",
+      image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&h=400&fit=crop",
+      description: "道路整備・造成・下水などのインフラを支える工事を行います。地域の生活基盤となる重要な工事です。",
+      details: "道路の新設・改良工事、宅地造成、公共施設の基礎工事など、幅広い土木工事に対応しています。最新の測量技術と施工管理により、高品質な工事を提供します。"
+    },
+    {
+      title: "河川工事",
+      image: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?q=80&w=800&h=400&fit=crop",
+      description: "堤防、砂防ダム、河道整正など災害対策工事を実施します。",
+      details: "河川の護岸工事、堤防補強、河床掘削など、水害から地域を守る重要な工事を担当しています。豊富な経験と実績により、安全で確実な施工を行います。"
+    },
+    {
+      title: "舗装工事",
+      image: "https://images.unsplash.com/photo-1509395062183-67c5ad6faff9?q=80&w=800&h=400&fit=crop",
+      description: "アスファルト・コンクリートによる道路舗装工事を行います。",
+      details: "道路の新設舗装から補修工事まで、あらゆる舗装工事に対応。耐久性の高い施工技術で、快適な道路環境を提供します。駐車場や歩道の舗装も承ります。"
+    },
+    {
+      title: "水道施設工事",
+      image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=800&h=400&fit=crop",
+      description: "ポンプ場・配水池・水道管など生活水供給設備工事を担当します。",
+      details: "上下水道管の敷設・更新工事、配水設備の設置など、生活に欠かせない水道インフラの整備を行います。漏水対策や老朽管の更新工事も対応可能です。"
+    },
+    {
+      title: "鋼構造物工事",
+      image: "https://images.unsplash.com/photo-1590496793907-4b8b10a4153c?q=80&w=800&h=400&fit=crop",
+      description: "鉄骨加工・組立を行う建築の骨組づくりを行います。",
+      details: "建築物の鉄骨構造体の製作・組立、鋼橋の架設工事など、精密な技術が必要な鋼構造物工事を手掛けています。安全性と強度を重視した施工を行います。"
+    },
+    {
+      title: "とび・土工工事",
+      image: "https://images.unsplash.com/photo-1572981558774-5cbf6de04f49?q=80&w=800&h=400&fit=crop",
+      description: "足場組立、土工事、コンクリート打設など多様な工事に対応します。",
+      details: "建設現場における足場の組立・解体、掘削・盛土などの土工事、型枠工事、コンクリート打設など、建設工事に必要な基礎的な工事全般を担当しています。"
+    }
+  ];
+
+  let currentSlide = 0;
+
+  function renderSlides() {
+    const container = document.getElementById("sliderContainer");
+    const start = currentSlide * 3;
+    const items = businessData.slice(start, start + 3);
+    
+    container.innerHTML = items.map((item, idx) => `
+      <div class="slider-card" onclick="openModal(${start + idx})">
+        <img src="${item.image}" alt="${item.title}">
+        <h4>${item.title}</h4>
+      </div>
+    `).join("");
+  }
+
+  function changeSlide(direction) {
+    const maxSlides = Math.ceil(businessData.length / 3) - 1;
+    currentSlide += direction;
+    if (currentSlide < 0) currentSlide = maxSlides;
+    if (currentSlide > maxSlides) currentSlide = 0;
+    renderSlides();
+  }
+
+  function openModal(index) {
+    const item = businessData[index];
+    document.getElementById("modalBody").innerHTML = `
+      <img src="${item.image}" alt="${item.title}">
+      <h2>${item.title}</h2>
+      <p style="font-size:18px;line-height:1.8;margin-bottom:16px;">${item.description}</p>
+      <p style="line-height:1.8;color:#4b5563;">${item.details}</p>
+    `;
+    document.getElementById("modal").classList.add("active");
+  }
+
+  function closeModal() {
+    document.getElementById("modal").classList.remove("active");
+  }
+
+  document.getElementById("modal").addEventListener("click", function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  renderSlides();
+
+  function renderInfo(info){
+    const badge = info.category === "イベント" ? "badge-event" : info.category === "その他" ? "badge-other" : "";
+    return `
+      <li class="info-item" onclick="location.href='information_detail.html?id=${info.id}'">
+        <div class="info-date">${info.date}</div>
+        <div class="info-title">${info.title}</div>
+        <span class="${badge}">${info.category}</span>
+      </li>`;
+  }
+
+  function loadInformation(page = 1){
+    const raw = localStorage.getItem("information-list");
+    const list = raw ? JSON.parse(raw) : [];
+    const el = document.getElementById("infoList");
+
+    if(list.length === 0){
+      el.innerHTML = "<li style='padding:20px;color:gray'>お知らせはまだありません</li>";
+      return;
+    }
+
+    list.sort((a,b) => b.timestamp - a.timestamp);
+    const latest = list.slice(0,3);
+    const olds = list.slice(3);
+    const perPage = 3;
+    const totalPages = Math.ceil(olds.length / perPage) || 1;
+
+    if(page < 1) page = 1;
+    if(page > totalPages) page = totalPages;
+
+    const start = (page - 1) * perPage;
+    const pageItems = olds.slice(start, start + perPage);
+
+    let html = "";
+    html += `<h3 style='text-align:left;margin:6px 0;'>最新のお知らせ</h3>`;
+    html += latest.map(renderInfo).join("");
+    html += `<hr style='margin:20px 0;'>`;
+    html += `<h3 style='text-align:left;margin:6px 0;'>過去のお知らせ</h3>`;
+    html += pageItems.length === 0 ? `<p style='color:gray'>過去のお知らせはありません</p>` : pageItems.map(renderInfo).join("");
+
+    html += `<div class='pagination'>`;
+    html += `<span class='page-btn' onclick='loadInformation(1)'>≪</span>`;
+    html += `<span class='page-btn' onclick='loadInformation(${page - 1})'>＜</span>`;
+    for(let i=1;i<=totalPages;i++){
+      html += `<span class='page-btn ${i===page?'active':''}' onclick='loadInformation(${i})'>${i}</span>`;
+    }
+    html += `<span class='page-btn' onclick='loadInformation(${page + 1})'>＞</span>`;
+    html += `<span class='page-btn' onclick='loadInformation(${totalPages})'>≫</span>`;
+    html += `</div>`;
+
+    el.innerHTML = html;
+  }
+
+  loadInformation();
+</script>
+
+</body>
+</html>

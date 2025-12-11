@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>お知らせ詳細 - 株式会社窪田建設</title>
+  <style>
+    :root{
+      --accent:#0b6fb2;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --bg:#f6f8fb;
+      font-family: Inter, "Noto Sans JP", system-ui, sans-serif;
+    }
+    body{margin:0;padding:24px;background:var(--bg);color:#0f1720}
+    .container{max-width:900px;margin:0 auto}
+    .card{background:var(--card);padding:24px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.06)}
+    h1{margin:0 0 8px 0;font-size:24px}
+    .meta{color:var(--muted);margin-bottom:12px}
+    .content{white-space:pre-wrap;line-height:1.8;color:#333}
+    .images{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+    .images img{width:100%;height:200px;object-fit:cover;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+    .actions{display:flex;gap:10px;margin-top:16px}
+    .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn-primary{background:var(--accent);color:white}
+    .btn-ghost{background:white;border:1px solid #e6eaf2}
+    .form-row{margin-top:12px}
+    input[type="text"], input[type="date"], select, textarea{
+      width:100%;padding:10px;border-radius:8px;border:1px solid #d7dbe4;font-size:15px;box-sizing:border-box;
+    }
+    textarea{min-height:140px}
+    .img-preview{width:100%;height:120px;object-fit:cover;border-radius:8px;margin-top:8px}
+    .small-muted{font-size:13px;color:var(--muted)}
+    .danger{background:#ef4444;color:white;border:none;padding:8px 10px;border-radius:8px;cursor:pointer}
+    @media(max-width:600px){
+      .images img{height:140px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="mainBox" class="card">
+      <!-- コンテンツはスクリプトで埋める -->
+      読み込み中...
+    </div>
+  </div>
+
+<script>
+// ===== ユーティリティ =====
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+const editMode = params.get('edit') === '1' || params.get('edit') === 'true';
+const mainBox = document.getElementById('mainBox');
+
+function getList(){ const raw = localStorage.getItem('information-list'); return raw ? JSON.parse(raw) : []; }
+function saveList(list){ localStorage.setItem('information-list', JSON.stringify(list)); }
+
+// Base64 変換
+function fileToBase64(file){
+  return new Promise(resolve=>{
+    if(!file){ resolve(null); return; }
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.readAsDataURL(file);
+  });
+}
+
+// 管理者かどうか
+function isAdmin(){ return localStorage.getItem('admin-auth') === 'true'; }
+
+// ===== 表示 & 編集ロジック =====
+async function render() {
+  if(!id){
+    mainBox.innerHTML = `<p style="color:var(--muted)">お知らせIDが指定されていません。</p>`;
+    return;
+  }
+
+  const list = getList();
+  const info = list.find(i => i.id === id);
+
+  if(!info){
+    mainBox.innerHTML = `<p style="color:var(--muted)">お知らせが見つかりませんでした。</p>`;
+    return;
+  }
+
+  // 編集モード要求があっても管理者じゃない場合はリダイレクト or 表示のみ
+  if(editMode && !isAdmin()){
+    mainBox.innerHTML = `<p style="color:var(--muted)">編集するには管理者ログインが必要です。<br><a href="admin-login.html">管理者ログイン</a></p>`;
+    return;
+  }
+
+  // 表示モード
+  if(!editMode){
+    mainBox.innerHTML = `
+      <h1>${escapeHtml(info.title)}</h1>
+      <div class="meta"><strong>${escapeHtml(info.date)}</strong> / <span class="small-muted">${escapeHtml(info.category)}</span></div>
+      <div class="content">${escapeHtml(info.content || '')}</div>
+
+      ${(info.images && info.images.length) ? `
+        <div class="images">
+          ${info.images.map(img => `<img src="${img}" alt="image">`).join('')}
+        </div>
+      ` : ''}
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="location.href='index.html'">トップへ戻る</button>
+        ${ isAdmin() ? `<button class="btn btn-ghost" onclick="location.href='information_detail.html?id=${info.id}&edit=1'">編集</button>` : '' }
+      </div>
+    `;
+    return;
+  }
+
+  // ========== 編集フォームを表示 ==========
+  mainBox.innerHTML = `
+    <h2>お知らせを編集</h2>
+    <div class="form-row">
+      <label class="small-muted">タイトル</label>
+      <input type="text" id="f_title" value="${escapeHtmlAttr(info.title)}">
+    </div>
+
+    <div class="form-row">
+      <label class="small-muted">日付</label>
+      <input type="date" id="f_date" value="${escapeHtmlAttr(info.date)}">
+    </div>
+
+    <div class="form-row">
+      <label class="small-muted">カテゴリー</label>
+      <select id="f_category">
+        <option value="お知らせ">お知らせ</option>
+        <option value="イベント">イベント</option>
+        <option value="その他">その他</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label class="small-muted">内容</label>
+      <textarea id="f_content">${escapeHtmlAttr(info.content || '')}</textarea>
+    </div>
+
+    <div class="form-row">
+      <label class="small-muted">既存画像（クリックで拡大）</label>
+      <div id="existingImgs" class="images">
+        ${ (info.images || []).map((img, idx) => `
+          <div style="position:relative;">
+            <img src="${img}" alt="img${idx}">
+            <div style="position:absolute;right:8px;top:8px;">
+              <label style="background:#ffffffcc;padding:4px 6px;border-radius:6px;font-size:12px;cursor:pointer">
+                <input type="checkbox" data-index="${idx}" class="remove-checkbox"> 削除
+              </label>
+            </div>
+          </div>
+        `).join('') }
+      </div>
+      <div class="small-muted" style="margin-top:8px;">※既存画像を削除したい場合はチェックを入れてください。</div>
+    </div>
+
+    <div class="form-row">
+      <label class="small-muted">新しい画像を選択（未選択なら既存を維持。最大3枚まで）</label>
+      <input type="file" id="f_img1" accept="image/*">
+      <input type="file" id="f_img2" accept="image/*">
+      <input type="file" id="f_img3" accept="image/*">
+      <div class="small-muted">※新しく選んだ画像は既存画像の後ろに追加されます（または削除チェックを入れた画像と置換できます）。</div>
+    </div>
+
+    <div style="margin-top:12px;" class="actions">
+      <button class="btn btn-primary" id="saveBtn">保存する</button>
+      <button class="btn btn-ghost" onclick="location.href='information-admin.html'">管理画面へ</button>
+      <button class="danger" id="deleteBtn">削除</button>
+    </div>
+  `;
+
+  // 選択したカテゴリーをセット
+  document.getElementById('f_category').value = info.category || 'お知らせ';
+
+  // 保存処理
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const title = document.getElementById('f_title').value.trim();
+    const dateVal = document.getElementById('f_date').value;
+    const category = document.getElementById('f_category').value;
+    const content = document.getElementById('f_content').value;
+
+    if(!title){
+      alert('タイトルは必須です');
+      return;
+    }
+
+    // 既存画像配列を作る
+    let newImgs = Array.isArray(info.images) ? info.images.slice() : [];
+
+    // 削除チェックに応じて既存から削る
+    const removes = Array.from(document.querySelectorAll('.remove-checkbox'))
+      .filter(cb => cb.checked)
+      .map(cb => Number(cb.dataset.index));
+
+    // remove indices may be in any order; remove from highest to lowest index to keep indices valid
+    removes.sort((a,b)=>b-a).forEach(idx => {
+      if(idx >= 0 && idx < newImgs.length) newImgs.splice(idx,1);
+    });
+
+    // 新規に選んだファイルをBase64化して追加（最大合計3枚）
+    const f1 = document.getElementById('f_img1').files[0];
+    const f2 = document.getElementById('f_img2').files[0];
+    const f3 = document.getElementById('f_img3').files[0];
+    const files = [f1,f2,f3].filter(Boolean);
+
+    for(const f of files){
+      if(newImgs.length >= 3) break;
+      const b = await fileToBase64(f);
+      if(b) newImgs.push(b);
+    }
+
+    // 更新（timestamp は変更しない）
+    const list = getList();
+    const idx = list.findIndex(i => i.id === info.id);
+    if(idx === -1){
+      alert('データが見つからなくなりました');
+      return;
+    }
+
+    list[idx].title = title;
+    list[idx].date = dateVal;
+    list[idx].category = category;
+    list[idx].content = content;
+    list[idx].images = newImgs;
+
+    saveList(list);
+
+    alert('保存しました（並び順は変わりません）');
+    // 編集完了後は管理画面へ戻す（必要なら location.href = 'information_detail.html?id='+info.id;）
+    location.href = 'information-admin.html';
+  });
+
+  // 削除ボタン（編集モードから）
+  document.getElementById('deleteBtn').addEventListener('click', ()=> {
+    if(!confirm('このお知らせを削除しますか？')) return;
+    let list = getList();
+    list = list.filter(i => i.id !== info.id);
+    saveList(list);
+    alert('削除しました');
+    location.href = 'information-admin.html';
+  });
+
+} // render END
+
+// HTMLエスケープ（表示用）
+function escapeHtml(str){
+  if(!str && str !== 0) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+// 属性値として安全に入れる（簡易）
+function escapeHtmlAttr(s){ return escapeHtml(s).replace(/\r?\n/g,''); }
+
+// 初期表示
+render();
+
+</script>
+</body>
+</html>
